@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXUS STORE</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --bg:#07090d;--panel:#10141b;--panel2:#171c25;--text:#f5f7fb;--muted:#9ba5b5;
+ --accent:#6c5ce7;--accent2:#8b7cff;--line:#252c38;--danger:#ef5350;
+}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+.hidden{display:none!important}
+.app{min-height:100vh}
+.topbar{height:72px;background:rgba(7,9,13,.94);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:22px;padding:0 5%;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
+.logo{font-size:22px;font-weight:900;letter-spacing:1px;white-space:nowrap}
+.logo span{color:var(--accent2)}
+.nav{display:flex;gap:8px}
+.nav button,.iconbtn{background:transparent;color:var(--muted);padding:11px 14px;border-radius:10px}
+.nav button:hover,.nav button.active,.iconbtn:hover{background:var(--panel2);color:white}
+.search{margin-left:auto;display:flex;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:0 12px;width:240px}
+.search input{width:100%;background:transparent;border:0;outline:0;color:white;padding:10px}
+.userbox{font-size:13px;color:var(--muted);white-space:nowrap}
+main{padding-bottom:60px}
+.page{display:none;padding:30px 5%;animation:fade .2s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+.hero{min-height:430px;border-radius:22px;overflow:hidden;position:relative;display:flex;align-items:end;background:
+linear-gradient(90deg,rgba(5,7,10,.97) 0%,rgba(5,7,10,.75) 38%,rgba(5,7,10,.15) 100%),
+url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1800&q=85') center/cover}
+.hero-content{max-width:620px;padding:55px}
+.badge{display:inline-block;background:rgba(108,92,231,.2);border:1px solid rgba(139,124,255,.45);color:#b8aeff;padding:7px 11px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:15px}
+.hero h1{font-size:48px;line-height:1.02;margin-bottom:15px}
+.hero p{color:#c7cbd4;line-height:1.6;margin-bottom:24px}
+.primary{background:var(--accent);color:white;padding:13px 20px;border-radius:11px;font-weight:bold}
+.primary:hover{background:var(--accent2)}
+.secondary{background:var(--panel2);color:white;padding:13px 20px;border-radius:11px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin:32px 0 16px}
+.section-head h2{font-size:23px}
+.muted{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:.2s;min-width:0}
+.card:hover{transform:translateY(-4px);border-color:#414b5d}
+.cover{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#1c2330}
+.card-body{padding:13px}
+.card h3{font-size:15px;margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .meta{font-size:12px;color:var(--muted);margin-bottom:11px}
+.card-actions{display:flex;gap:7px}
+.smallbtn{flex:1;padding:9px 8px;border-radius:9px;background:var(--panel2);color:white;font-size:12px}
+.smallbtn.primary{background:var(--accent)}
+.categories{display:flex;gap:9px;flex-wrap:wrap}
+.cat{padding:9px 13px;background:var(--panel);border:1px solid var(--line);border-radius:20px;color:#cbd1dc}
+.cat.active,.cat:hover{background:var(--accent);color:white;border-color:var(--accent)}
+.detail{max-width:1100px;margin:auto}
+.detail-banner{height:380px;border-radius:20px;overflow:hidden;background-size:cover;background-position:center;position:relative}
+.detail-banner:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,9,13,.95),transparent 70%)}
+.detail-info{position:relative;margin-top:-115px;padding:0 35px 35px;z-index:2}
+.detail-info h1{font-size:40px;margin-bottom:10px}
+.detail-info p{max-width:750px;color:#c4c9d3;line-height:1.6;margin:15px 0}
+.info-row{display:flex;gap:20px;flex-wrap:wrap;color:var(--muted);font-size:14px}
+.login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 50% 0,#171329 0,#07090d 45%)}
+.login{width:min(430px,100%);background:var(--panel);border:1px solid var(--line);padding:35px;border-radius:20px;box-shadow:0 20px 70px #0008}
+.login h1{text-align:center;margin-bottom:8px}.login p{text-align:center;color:var(--muted);margin-bottom:28px}
+.field{margin-bottom:15px}.field label{display:block;color:#cbd1dc;font-size:13px;margin-bottom:7px}
+.field input,.field textarea,.field select{width:100%;background:#0b0e13;border:1px solid var(--line);color:white;border-radius:10px;padding:12px;outline:none}
+.field textarea{min-height:110px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent)}
+.full{width:100%}
+.error{color:#ff817e;text-align:center;font-size:13px;margin-top:12px}
+.admin-grid{display:grid;grid-template-columns:380px 1fr;gap:22px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:22px}
+.panel h2{margin-bottom:18px}
+.admin-list{display:grid;gap:10px}
+.admin-item{display:flex;align-items:center;gap:12px;background:#0c1016;border:1px solid var(--line);padding:10px;border-radius:12px}
+.admin-item img{width:80px;height:45px;object-fit:cover;border-radius:7px}
+.admin-item .grow{flex:1;min-width:0}.admin-item strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.danger{background:var(--danger);color:white;padding:9px 11px;border-radius:8px}
+.empty{text-align:center;padding:60px 20px;color:var(--muted);border:1px dashed var(--line);border-radius:15px}
+.toast{position:fixed;right:20px;bottom:20px;background:#171c25;border:1px solid #343d4c;padding:13px 17px;border-radius:11px;z-index:100;box-shadow:0 10px 35px #0008}
+footer{text-align:center;color:#596271;padding:30px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}.admin-grid{grid-template-columns:1fr}}
+@media(max-width:700px){
+ .topbar{height:auto;min-height:64px;padding:10px 4%;flex-wrap:wrap}.nav{order:3;width:100%;overflow:auto}.search{width:170px}.userbox{display:none}
+ .page{padding:20px 4%}.hero{min-height:440px}.hero-content{padding:28px}.hero h1{font-size:34px}.grid{grid-template-columns:repeat(2,1fr)}.detail-banner{height:280px}.detail-info{padding:0 18px 25px;margin-top:-75px}.detail-info h1{font-size:29px}
+}
+@media(max-width:420px){.grid{grid-template-columns:1fr}.search{width:145px}}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="login-wrap">
+  <div class="login">
+    <div class="logo" style="text-align:center;font-size:30px;margin-bottom:12px">NEXUS<span>STORE</span></div>
+    <h1>Entrar na loja</h1>
+    <p>Acesse o catálogo e seus favoritos.</p>
+    <div class="field"><label>Nome</label><input id="loginName" placeholder="Seu nome"></div>
+    <button class="primary full" onclick="login()">ENTRAR</button>
+    <div id="loginError" class="error"></div>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+<header class="topbar">
+  <div class="logo">NEXUS<span>STORE</span></div>
+  <nav class="nav">
+    <button data-page="home" class="active" onclick="showPage('home')">Início</button>
+    <button data-page="games" onclick="showPage('games')">Jogos</button>
+    <button data-page="favorites" onclick="showPage('favorites')">Favoritos</button>
+    <button data-page="admin" onclick="openAdmin()">Admin</button>
+  </nav>
+  <div class="search">⌕ <input id="searchInput" placeholder="Pesquisar..." oninput="renderGames()"></div>
+  <div class="userbox">Olá, <b id="userName"></b></div>
+</header>
+
+<main>
+<section id="home" class="page active">
+  <div class="hero">
+    <div class="hero-content">
+      <span class="badge">DESTAQUE DA LOJA</span>
+      <h1>Seu próximo jogo começa aqui.</h1>
+      <p>Uma experiência moderna para descobrir jogos, abrir páginas individuais e acessar downloads diretos de arquivos autorizados.</p>
+      <div class="actions"><button class="primary" onclick="showPage('games')">VER JOGOS</button><button class="secondary" onclick="showPage('favorites')">♥ FAVORITOS</button></div>
+    </div>
+  </div>
+  <div class="section-head"><h2>Jogos em destaque</h2><span class="muted">Catálogo</span></div>
+  <div id="featuredGrid" class="grid"></div>
+  <div class="section-head"><h2>Categorias</h2></div>
+  <div id="categoryHome" class="categories"></div>
+</section>
+
+<section id="games" class="page">
+  <div class="section-head"><div><h2>Todos os jogos</h2><span class="muted">Explore o catálogo</span></div></div>
+  <div id="categories" class="categories" style="margin-bottom:20px"></div>
+  <div id="gamesGrid" class="grid"></div>
+</section>
+
+<section id="favorites" class="page">
+  <div class="section-head"><div><h2>Favoritos</h2><span class="muted">Seus jogos salvos</span></div></div>
+  <div id="favoritesGrid" class="grid"></div>
+</section>
+
+<section id="detail" class="page">
+  <div id="detailContent"></div>
+</section>
+
+<section id="admin" class="page">
+  <div class="section-head"><div><h2>Painel Admin</h2><span class="muted">Gerencie o catálogo local</span></div><button class="secondary" onclick="showPage('home')">Voltar</button></div>
+  <div class="admin-grid">
+    <div class="panel">
+      <h2 id="formTitle">Adicionar jogo</h2>
+      <div class="field"><label>Nome do jogo</label><input id="gameName" placeholder="Ex.: Horizon Zero Dawn"></div>
+      <div class="field"><label>Banner / capa (URL da imagem)</label><input id="gameImage" placeholder="https://..."></div>
+      <div class="field"><label>Descrição</label><textarea id="gameDesc" placeholder="Descrição do jogo..."></textarea></div>
+      <div class="field"><label>Categoria</label><input id="gameCategory" placeholder="Ação, Corrida, Terror..."></div>
+      <div class="field"><label>Tamanho</label><input id="gameSize" placeholder="Ex.: 45 GB"></div>
+      <div class="field"><label>Link direto de download</label><input id="gameLink" placeholder="https://seusite.com/arquivo"></div>
+      <div class="actions"><button class="primary" onclick="saveGame()">SALVAR JOGO</button><button class="secondary" onclick="clearForm()">LIMPAR</button></div>
+      <div id="adminMsg" class="error"></div>
+    </div>
+    <div class="panel">
+      <h2>Jogos cadastrados</h2>
+      <div id="adminList" class="admin-list"></div>
+    </div>
+  </div>
+</section>
+</main>
+<footer>NEXUS STORE • Interface demonstrativa</footer>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const ADMIN_PIN="1234"; // DEMONSTRAÇÃO. Não é segurança real em HTML público.
+const defaultGames=[
+ {id:1,name:"Neon Strike",category:"Ação",size:"18 GB",image:"https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1000&q=80",desc:"Um shooter futurista de ritmo rápido, com arenas iluminadas e combates intensos.",link:"#"},
+ {id:2,name:"Night Highway",category:"Corrida",size:"12 GB",image:"https://images.unsplash.com/photo-1504215680853-026ed2a45def?auto=format&fit=crop&w=1000&q=80",desc:"Corridas noturnas em alta velocidade por uma cidade cheia de neon.",link:"#"},
+ {id:3,name:"Lost Island",category:"Aventura",size:"26 GB",image:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1000&q=80",desc:"Explore uma ilha misteriosa e descubra o que aconteceu com seus habitantes.",link:"#"},
+ {id:4,name:"Shadow House",category:"Terror",size:"9 GB",image:"https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=1000&q=80",desc:"Uma experiência de terror atmosférico dentro de uma casa abandonada.",link:"#"},
+ {id:5,name:"Street Football",category:"Esporte",size:"7 GB",image:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1000&q=80",desc:"Partidas rápidas de futebol de rua em arenas urbanas.",link:"#"}
+];
+let games=JSON.parse(localStorage.getItem("nexus_games")||"null")||defaultGames;
+let favorites=JSON.parse(localStorage.getItem("nexus_favs")||"[]");
+let currentCategory="Todos",editingId=null;
+
+function saveDB(){localStorage.setItem("nexus_games",JSON.stringify(games));localStorage.setItem("nexus_favs",JSON.stringify(favorites))}
+function login(){
+ const n=document.getElementById("loginName").value.trim();
+ if(!n){document.getElementById("loginError").textContent="Digite seu nome.";return}
+ localStorage.setItem("nexus_user",n);startApp();
+}
+function startApp(){
+ const n=localStorage.getItem("nexus_user"); if(!n)return;
+ document.getElementById("loginScreen").classList.add("hidden");document.getElementById("app").classList.remove("hidden");
+ document.getElementById("userName").textContent=n;renderAll();
+}
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ if(id==="games")renderGames();if(id==="favorites")renderFavorites();if(id==="admin")renderAdmin();
+ window.scrollTo(0,0);
+}
+function openAdmin(){
+ const pin=prompt("PIN do painel Admin:");
+ if(pin!==ADMIN_PIN){if(pin!==null)toast("PIN incorreto.");return}
+ showPage("admin");
+}
+function card(g){
+ const fav=favorites.includes(g.id);
+ return `<article class="card">
+ <img class="cover" src="${safe(g.image)}" onerror="this.src='https://via.placeholder.com/800x450/171c25/ffffff?text=Sem+imagem'">
+ <div class="card-body"><h3>${safe(g.name)}</h3><div class="meta">${safe(g.category)} • ${safe(g.size)}</div>
+ <div class="card-actions"><button class="smallbtn" onclick="detail(${g.id})">VER</button><button class="smallbtn" onclick="toggleFav(${g.id})">${fav?'♥':'♡'}</button></div></div></article>`;
+}
+function renderAll(){renderFeatured();renderGames();renderFavorites();renderCategories();renderAdmin()}
+function renderFeatured(){document.getElementById("featuredGrid").innerHTML=games.slice(0,5).map(card).join("")||empty()}
+function renderGames(){
+ let q=document.getElementById("searchInput").value.toLowerCase();
+ let list=games.filter(g=>(currentCategory==="Todos"||g.category===currentCategory)&&(!q||g.name.toLowerCase().includes(q)));
+ document.getElementById("gamesGrid").innerHTML=list.map(card).join("")||empty("Nenhum jogo encontrado.");
+ renderCategories();
+}
+function renderFavorites(){let list=games.filter(g=>favorites.includes(g.id));document.getElementById("favoritesGrid").innerHTML=list.map(card).join("")||empty("Você ainda não tem favoritos.")}
+function categories(){
+ return ["Todos",...new Set(games.map(g=>g.category).filter(Boolean))];
+}
+function renderCategories(){
+ const html=categories().map(c=>`<button class="cat ${c===currentCategory?'active':''}" onclick="setCat('${escAttr(c)}')">${safe(c)}</button>`).join("");
+ document.getElementById("categories").innerHTML=html;document.getElementById("categoryHome").innerHTML=html;
+}
+function setCat(c){currentCategory=c;showPage("games")}
+function detail(id){
+ const g=games.find(x=>x.id===id);if(!g)return;
+ document.getElementById("detailContent").innerHTML=`<div class="detail">
+ <div class="detail-banner" style="background-image:url('${safe(g.image)}')"></div>
+ <div class="detail-info"><span class="badge">${safe(g.category)}</span><h1>${safe(g.name)}</h1>
+ <div class="info-row"><span>📦 ${safe(g.size||"Tamanho não informado")}</span><span>🎮 Catálogo</span></div>
+ <p>${safe(g.desc||"Sem descrição.")}</p>
+ <div class="actions"><a class="primary" style="text-decoration:none" href="${safe(g.link)}" target="_blank" rel="noopener">⬇ BAIXAR</a><button class="secondary" onclick="toggleFav(${g.id})">${favorites.includes(g.id)?'♥ Remover favorito':'♡ Adicionar aos favoritos'}</button></div>
+ </div></div>`;
+ showPage("detail");
+}
+function toggleFav(id){favorites.includes(id)?favorites=favorites.filter(x=>x!==id):favorites.push(id);saveDB();renderAll();if(document.getElementById("detail").classList.contains("active"))detail(id);toast("Favoritos atualizados.")}
+function saveGame(){
+ const data={name:gameName.value.trim(),image:gameImage.value.trim(),desc:gameDesc.value.trim(),category:gameCategory.value.trim()||"Outros",size:gameSize.value.trim()||"Não informado",link:gameLink.value.trim()||"#"};
+ if(!data.name||!data.image||!data.link){adminMsg.textContent="Preencha nome, imagem e link.";return}
+ if(editingId){let i=games.findIndex(g=>g.id===editingId);games[i]={...games[i],...data};toast("Jogo atualizado.")}
+ else{games.unshift({id:Date.now(),...data});toast("Jogo adicionado.")}
+ saveDB();clearForm();renderAll();
+}
+function renderAdmin(){
+ const el=document.getElementById("adminList");if(!el)return;
+ el.innerHTML=games.map(g=>`<div class="admin-item"><img src="${safe(g.image)}"><div class="grow"><strong>${safe(g.name)}</strong><small class="muted">${safe(g.category)} • ${safe(g.size)}</small></div><button class="smallbtn" onclick="editGame(${g.id})">Editar</button><button class="danger" onclick="deleteGame(${g.id})">Excluir</button></div>`).join("")||empty();
+}
+function editGame(id){
+ let g=games.find(x=>x.id===id);if(!g)return;editingId=id;
+ gameName.value=g.name;gameImage.value=g.image;gameDesc.value=g.desc;gameCategory.value=g.category;gameSize.value=g.size;gameLink.value=g.link;
+ formTitle.textContent="Editar jogo";window.scrollTo(0,0);
+}
+function deleteGame(id){if(!confirm("Excluir este jogo?"))return;games=games.filter(g=>g.id!==id);favorites=favorites.filter(x=>x!==id);saveDB();renderAll();toast("Jogo excluído.")}
+function clearForm(){editingId=null;["gameName","gameImage","gameDesc","gameCategory","gameSize","gameLink"].forEach(id=>document.getElementById(id).value="");formTitle.textContent="Adicionar jogo";adminMsg.textContent=""}
+function empty(t="Nenhum item disponível."){return `<div class="empty" style="grid-column:1/-1">${t}</div>`}
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.remove("hidden");setTimeout(()=>e.classList.add("hidden"),1800)}
+function safe(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function escAttr(v){return String(v).replace(/\\/g,"\\\\").replace(/'/g,"\\'")}
+startApp();
+</script>
+</body>
+</html>
